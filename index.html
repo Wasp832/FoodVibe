@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daily Meal Planner</title>
+    <title>Enhanced Daily Meal Planner</title>
     <style>
         * {
             margin: 0;
@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -39,14 +39,66 @@
             font-size: 2em;
         }
 
-        .stats-info {
+        .date-nav {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .date-display {
+            text-align: center;
+            color: #2D5016;
+            font-size: 1.2em;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: #FAFFF0;
+            border-radius: 10px;
+            border: 2px solid #6B8E23;
+            min-width: 300px;
+        }
+
+        .date-nav-btn {
+            background: #6B8E23;
+            color: #F0FFF0;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .date-nav-btn:hover {
+            background: #556B2F;
+            transform: scale(1.05);
+        }
+
+        .date-nav-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .today-badge {
+            background: #CD5C5C;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .stats-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
             margin-top: 20px;
         }
 
         .stat-card {
-            flex: 1;
             background: linear-gradient(135deg, #6B8E23 0%, #556B2F 100%);
             color: #F0FFF0;
             padding: 20px;
@@ -64,14 +116,6 @@
         .stat-label {
             font-size: 0.9em;
             opacity: 0.9;
-        }
-
-        .date-display {
-            text-align: center;
-            color: #2D5016;
-            font-size: 1.1em;
-            margin-bottom: 15px;
-            font-weight: 600;
         }
 
         .progress-bar {
@@ -97,7 +141,8 @@
         }
 
         .action-buttons {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 10px;
             margin-top: 15px;
         }
@@ -110,7 +155,6 @@
             font-weight: 600;
             font-size: 1em;
             transition: all 0.3s;
-            flex: 1;
         }
 
         .btn-reset {
@@ -130,6 +174,26 @@
 
         .btn-summary:hover {
             background: #556B2F;
+            transform: translateY(-2px);
+        }
+
+        .btn-calendar {
+            background: #8B7355;
+            color: #F0FFF0;
+        }
+
+        .btn-calendar:hover {
+            background: #6B5845;
+            transform: translateY(-2px);
+        }
+
+        .btn-export {
+            background: #4682B4;
+            color: #F0FFF0;
+        }
+
+        .btn-export:hover {
+            background: #36648B;
             transform: translateY(-2px);
         }
 
@@ -203,7 +267,7 @@
             accent-color: #6B8E23;
         }
 
-        .summary-section {
+        .summary-section, .calendar-section {
             background: linear-gradient(135deg, #F0FFF0 0%, #E8F5E9 100%);
             border-radius: 20px;
             padding: 30px;
@@ -213,20 +277,19 @@
             display: none;
         }
 
-        .summary-section.active {
+        .summary-section.active, .calendar-section.active {
             display: block;
         }
 
-        .summary-section h2 {
-            color: #2D5016;
-            margin-bottom: 20px;
-        }
-
-        .summary-header {
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+        }
+
+        .section-header h2 {
+            color: #2D5016;
         }
 
         .streak-section {
@@ -252,6 +315,85 @@
         .streak-description {
             font-size: 1.1em;
             opacity: 0.9;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .calendar-header {
+            text-align: center;
+            font-weight: bold;
+            color: #2D5016;
+            padding: 10px;
+            background: #FAFFF0;
+            border-radius: 8px;
+        }
+
+        .calendar-day {
+            background: #FAFFF0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #E8F5E9;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .calendar-day:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(45, 80, 22, 0.2);
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
+        }
+
+        .calendar-day.today {
+            border-color: #CD5C5C;
+            border-width: 3px;
+        }
+
+        .calendar-day.completed {
+            background: linear-gradient(135deg, #6B8E23 0%, #8FBC8F 100%);
+            color: #F0FFF0;
+            border-color: #556B2F;
+        }
+
+        .calendar-day.partial {
+            background: linear-gradient(135deg, #F0E68C 0%, #FFD700 100%);
+            color: #2D5016;
+            border-color: #DAA520;
+        }
+
+        .day-number {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .day-meals {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-month {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2D5016;
         }
 
         .weekly-grid {
@@ -281,14 +423,9 @@
             margin-bottom: 10px;
         }
 
-        .day-meals {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-
-        .week-summary-stats {
+        .summary-stats {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
@@ -313,22 +450,79 @@
             font-size: 0.9em;
         }
 
-        .btn-secondary {
-            background: #8B7355;
-            color: #F0FFF0;
+        .achievement-section {
+            background: #FAFFF0;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
         }
 
-        .btn-secondary:hover {
-            background: #6B5845;
+        .achievement-section h3 {
+            color: #2D5016;
+            margin-bottom: 15px;
         }
 
-        @media (max-width: 600px) {
-            .stats-info {
-                flex-direction: column;
-            }
-            
+        .achievements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .achievement {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .achievement.locked {
+            background: #E0E0E0;
+            opacity: 0.5;
+        }
+
+        .achievement-icon {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .achievement-name {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #2D5016;
+        }
+
+        .notes-section {
+            margin-top: 20px;
+            background: #FAFFF0;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .notes-section h3 {
+            color: #2D5016;
+            margin-bottom: 10px;
+        }
+
+        .notes-input {
+            width: 100%;
+            min-height: 80px;
+            padding: 10px;
+            border: 2px solid #6B8E23;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1em;
+            resize: vertical;
+        }
+
+        @media (max-width: 768px) {
             h1 {
                 font-size: 1.5em;
+            }
+
+            .date-display {
+                min-width: 200px;
+                font-size: 1em;
             }
 
             .meal-item {
@@ -337,15 +531,18 @@
                 gap: 15px;
             }
 
-            .action-buttons {
-                flex-direction: column;
+            .calendar-grid {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 5px;
             }
 
-            .weekly-grid {
-                grid-template-columns: repeat(3, 1fr);
+            .calendar-day {
+                min-height: 60px;
+                padding: 8px;
+                font-size: 0.9em;
             }
 
-            .week-summary-stats {
+            .summary-stats {
                 grid-template-columns: 1fr;
             }
         }
@@ -354,11 +551,20 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🍽 Daily Meal Planner</h1>
-            <div class="date-display" id="dateDisplay"></div>
+            <h1>🍽 Enhanced Meal Planner</h1>
+            
+            <div class="date-nav">
+                <button class="date-nav-btn" onclick="changeDate(-1)">◀ Previous</button>
+                <div class="date-display">
+                    <span id="dateDisplay"></span>
+                    <span id="todayBadge" class="today-badge" style="display: none; margin-left: 10px;">TODAY</span>
+                </div>
+                <button class="date-nav-btn" id="nextBtn" onclick="changeDate(1)">Next ▶</button>
+            </div>
+
             <div class="stats-info">
                 <div class="stat-card">
-                    <div class="stat-label">Today's Progress</div>
+                    <div class="stat-label">Day's Progress</div>
                     <div class="stat-number" id="todayMeals">0/6</div>
                     <div class="stat-label">meals</div>
                 </div>
@@ -372,20 +578,44 @@
                     <div class="stat-number" id="bestStreak">0</div>
                     <div class="stat-label">days</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Meals</div>
+                    <div class="stat-number" id="totalMeals">0</div>
+                    <div class="stat-label">all time</div>
+                </div>
             </div>
+
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill" style="width: 0%;">0%</div>
             </div>
+
             <div class="action-buttons">
-                <button class="btn btn-summary" onclick="toggleSummary()">📊 Weekly Summary</button>
-                <button class="btn btn-reset" onclick="confirmResetMeals()">🔄 Reset Today</button>
+                <button class="btn btn-calendar" onclick="toggleCalendar()">📅 Calendar</button>
+                <button class="btn btn-summary" onclick="toggleSummary()">📊 Stats</button>
+                <button class="btn btn-export" onclick="exportData()">💾 Export</button>
+                <button class="btn btn-reset" onclick="confirmResetMeals()">🔄 Reset Day</button>
             </div>
         </div>
 
+        <div id="calendarSection" class="calendar-section">
+            <div class="section-header">
+                <h2>📅 Calendar View</h2>
+                <button class="btn btn-calendar" onclick="toggleCalendar()">Close</button>
+            </div>
+            
+            <div class="calendar-nav">
+                <button class="date-nav-btn" onclick="changeCalendarMonth(-1)">◀ Previous</button>
+                <div class="calendar-month" id="calendarMonth"></div>
+                <button class="date-nav-btn" onclick="changeCalendarMonth(1)">Next ▶</button>
+            </div>
+
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+
         <div id="summarySection" class="summary-section">
-            <div class="summary-header">
-                <h2>📊 Weekly Summary</h2>
-                <button class="btn btn-secondary" onclick="toggleSummary()">Close</button>
+            <div class="section-header">
+                <h2>📊 Statistics & Insights</h2>
+                <button class="btn btn-summary" onclick="toggleSummary()">Close</button>
             </div>
             
             <div class="streak-section">
@@ -398,19 +628,28 @@
             <h3 style="color: #2D5016; margin-bottom: 15px;">Last 7 Days</h3>
             <div class="weekly-grid" id="weeklyGrid"></div>
 
-            <div class="week-summary-stats">
+            <div class="summary-stats">
                 <div class="summary-stat">
                     <div class="summary-stat-number" id="weekTotal">0</div>
-                    <div class="summary-stat-label">Total Meals</div>
+                    <div class="summary-stat-label">Week Total</div>
                 </div>
                 <div class="summary-stat">
                     <div class="summary-stat-number" id="weekAverage">0</div>
-                    <div class="summary-stat-label">Avg Per Day</div>
+                    <div class="summary-stat-label">Daily Average</div>
                 </div>
                 <div class="summary-stat">
                     <div class="summary-stat-number" id="perfectDays">0</div>
-                    <div class="summary-stat-label">Perfect Days (6/6)</div>
+                    <div class="summary-stat-label">Perfect Days</div>
                 </div>
+                <div class="summary-stat">
+                    <div class="summary-stat-number" id="completionRate">0%</div>
+                    <div class="summary-stat-label">Completion Rate</div>
+                </div>
+            </div>
+
+            <div class="achievement-section">
+                <h3>🏆 Achievements</h3>
+                <div class="achievements" id="achievements"></div>
             </div>
         </div>
 
@@ -509,9 +748,16 @@
                 <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('nightsnack', 1, this.checked)">
             </div>
         </div>
+
+        <div class="meal-section notes-section">
+            <h3>📝 Daily Notes</h3>
+            <textarea id="dailyNotes" class="notes-input" placeholder="Add notes about your day, how you felt, energy levels, etc..."></textarea>
+        </div>
     </div>
 
     <script>
+        let currentViewDate = new Date();
+        let calendarViewDate = new Date();
         let mealData = loadMealData();
 
         function loadMealData() {
@@ -526,9 +772,11 @@
             
             return {
                 meals: {},
+                notes: {},
                 streak: 0,
                 bestStreak: 0,
-                lastCompletedDate: null
+                lastCompletedDate: null,
+                totalMealsEver: 0
             };
         }
 
@@ -540,28 +788,66 @@
             }
         }
 
-        function getTodayKey() {
-            return new Date().toISOString().split('T')[0];
+        function getDateKey(date) {
+            return date.toISOString().split('T')[0];
         }
 
         function initMealPlanner() {
             updateDateDisplay();
-            loadTodaysMeals();
+            loadDayMeals();
             updateStats();
             checkStreak();
+            loadNotes();
         }
 
         function updateDateDisplay() {
-            const today = new Date();
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('dateDisplay').textContent = today.toLocaleDateString('en-US', options);
+            document.getElementById('dateDisplay').textContent = currentViewDate.toLocaleDateString('en-US', options);
+            
+            const today = getDateKey(new Date());
+            const viewing = getDateKey(currentViewDate);
+            const todayBadge = document.getElementById('todayBadge');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            if (today === viewing) {
+                todayBadge.style.display = 'inline';
+                nextBtn.disabled = true;
+            } else {
+                todayBadge.style.display = 'none';
+                nextBtn.disabled = false;
+            }
         }
 
-        function loadTodaysMeals() {
-            const todayKey = getTodayKey();
-            if (mealData.meals[todayKey]) {
-                const todayMeals = mealData.meals[todayKey];
-                Object.keys(todayMeals).forEach(mealId => {
+        function changeDate(days) {
+            const newDate = new Date(currentViewDate);
+            newDate.setDate(newDate.getDate() + days);
+            
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            if (newDate <= today) {
+                currentViewDate = newDate;
+                updateDateDisplay();
+                loadDayMeals();
+                updateStats();
+                loadNotes();
+            }
+        }
+
+        function loadDayMeals() {
+            const dateKey = getDateKey(currentViewDate);
+            
+            document.querySelectorAll('.meal-checkbox').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            document.querySelectorAll('.meal-item').forEach(item => {
+                item.classList.remove('completed');
+            });
+            
+            if (mealData.meals[dateKey]) {
+                const dayMeals = mealData.meals[dateKey];
+                Object.keys(dayMeals).forEach(mealId => {
                     const checkbox = document.querySelector(`#${mealId} input[type="checkbox"]`);
                     if (checkbox) {
                         checkbox.checked = true;
@@ -572,29 +858,31 @@
         }
 
         function toggleMeal(category, option, checked) {
-            const todayKey = getTodayKey();
+            const dateKey = getDateKey(currentViewDate);
             const mealId = `${category}-${option + 1}`;
             
-            if (!mealData.meals[todayKey]) {
-                mealData.meals[todayKey] = {};
+            if (!mealData.meals[dateKey]) {
+                mealData.meals[dateKey] = {};
             }
 
             if (checked) {
-                mealData.meals[todayKey][mealId] = true;
+                mealData.meals[dateKey][mealId] = true;
                 document.getElementById(mealId).classList.add('completed');
+                mealData.totalMealsEver++;
                 
-                // Uncheck the other option in the same category if it exists
                 const otherOption = option === 0 ? 1 : 0;
                 const otherMealId = `${category}-${otherOption + 1}`;
                 const otherCheckbox = document.querySelector(`#${otherMealId} input[type="checkbox"]`);
                 if (otherCheckbox && otherCheckbox.checked) {
                     otherCheckbox.checked = false;
-                    delete mealData.meals[todayKey][otherMealId];
+                    delete mealData.meals[dateKey][otherMealId];
                     document.getElementById(otherMealId).classList.remove('completed');
+                    mealData.totalMealsEver--;
                 }
             } else {
-                delete mealData.meals[todayKey][mealId];
+                delete mealData.meals[dateKey][mealId];
                 document.getElementById(mealId).classList.remove('completed');
+                mealData.totalMealsEver--;
             }
 
             saveMealData();
@@ -603,12 +891,13 @@
         }
 
         function updateStats() {
-            const todayKey = getTodayKey();
-            const todayMeals = mealData.meals[todayKey] || {};
-            const completedToday = Object.keys(todayMeals).length;
+            const dateKey = getDateKey(currentViewDate);
+            const dayMeals = mealData.meals[dateKey] || {};
+            const completedToday = Object.keys(dayMeals).length;
             const totalMeals = 6;
             
             document.getElementById('todayMeals').textContent = `${completedToday}/${totalMeals}`;
+            document.getElementById('totalMeals').textContent = mealData.totalMealsEver;
             
             const percentage = Math.round((completedToday / totalMeals) * 100);
             const progressFill = document.getElementById('progressFill');
@@ -620,58 +909,53 @@
         }
 
         function checkStreak() {
-            const todayKey = getTodayKey();
-            const todayMeals = mealData.meals[todayKey] || {};
-            const completedToday = Object.keys(todayMeals).length;
+            const allDates = Object.keys(mealData.meals).sort().reverse();
+            let currentStreak = 0;
+            let maxStreak = 0;
+            let tempStreak = 0;
             
-            if (completedToday >= 4) {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const yesterdayKey = yesterday.toISOString().split('T')[0];
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            for (let i = 0; i < 365; i++) {
+                const checkDate = new Date(today);
+                checkDate.setDate(checkDate.getDate() - i);
+                const checkKey = getDateKey(checkDate);
+                const meals = mealData.meals[checkKey] || {};
+                const mealCount = Object.keys(meals).length;
                 
-                if (mealData.lastCompletedDate === yesterdayKey || mealData.lastCompletedDate === todayKey) {
-                    if (mealData.lastCompletedDate !== todayKey) {
-                        mealData.streak++;
-                        mealData.lastCompletedDate = todayKey;
-                        
-                        if (mealData.streak > mealData.bestStreak) {
-                            mealData.bestStreak = mealData.streak;
-                        }
+                if (mealCount >= 4) {
+                    tempStreak++;
+                    if (i === 0 || (currentStreak > 0 && i <= currentStreak)) {
+                        currentStreak = tempStreak;
                     }
-                } else if (mealData.lastCompletedDate === null) {
-                    mealData.streak = 1;
-                    mealData.lastCompletedDate = todayKey;
-                    
-                    if (mealData.bestStreak === 0) {
-                        mealData.bestStreak = 1;
-                    }
+                    maxStreak = Math.max(maxStreak, tempStreak);
                 } else {
-                    mealData.streak = 1;
-                    mealData.lastCompletedDate = todayKey;
-                }
-            } else {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const yesterdayKey = yesterday.toISOString().split('T')[0];
-                
-                if (mealData.lastCompletedDate !== todayKey && mealData.lastCompletedDate !== yesterdayKey) {
-                    mealData.streak = 0;
+                    if (i === 0) {
+                        currentStreak = 0;
+                    }
+                    tempStreak = 0;
                 }
             }
+            
+            mealData.streak = currentStreak;
+            mealData.bestStreak = Math.max(maxStreak, mealData.bestStreak);
             
             saveMealData();
             updateStats();
         }
 
         function confirmResetMeals() {
-            if (confirm('Are you sure you want to reset today\'s meals? This will uncheck all meals for today.')) {
-                resetTodaysMeals();
+            if (confirm('Are you sure you want to reset this day\'s meals?')) {
+                resetDayMeals();
             }
         }
 
-        function resetTodaysMeals() {
-            const todayKey = getTodayKey();
-            delete mealData.meals[todayKey];
+        function resetDayMeals() {
+            const dateKey = getDateKey(currentViewDate);
+            const prevCount = Object.keys(mealData.meals[dateKey] || {}).length;
+            mealData.totalMealsEver -= prevCount;
+            delete mealData.meals[dateKey];
             
             document.querySelectorAll('.meal-checkbox').forEach(checkbox => {
                 checkbox.checked = false;
@@ -691,7 +975,104 @@
             section.classList.toggle('active');
             
             if (section.classList.contains('active')) {
+                document.getElementById('calendarSection').classList.remove('active');
                 updateWeeklySummary();
+                updateAchievements();
+            }
+        }
+
+        function toggleCalendar() {
+            const section = document.getElementById('calendarSection');
+            section.classList.toggle('active');
+            
+            if (section.classList.contains('active')) {
+                document.getElementById('summarySection').classList.remove('active');
+                renderCalendar();
+            }
+        }
+
+        function changeCalendarMonth(months) {
+            calendarViewDate.setMonth(calendarViewDate.getMonth() + months);
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const year = calendarViewDate.getFullYear();
+            const month = calendarViewDate.getMonth();
+            
+            document.getElementById('calendarMonth').textContent = 
+                calendarViewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const prevLastDay = new Date(year, month, 0);
+            
+            const firstDayOfWeek = firstDay.getDay();
+            const daysInMonth = lastDay.getDate();
+            const daysInPrevMonth = prevLastDay.getDate();
+            
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            weekdays.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-header';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+            
+            for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day other-month';
+                day.innerHTML = `<div class="day-number">${daysInPrevMonth - i}</div>`;
+                grid.appendChild(day);
+            }
+            
+            const today = getDateKey(new Date());
+            
+            for (let i = 1; i <= daysInMonth; i++) {
+                const date = new Date(year, month, i);
+                const dateKey = getDateKey(date);
+                const meals = mealData.meals[dateKey] || {};
+                const mealCount = Object.keys(meals).length;
+                
+                const day = document.createElement('div');
+                day.className = 'calendar-day';
+                
+                if (mealCount >= 6) {
+                    day.classList.add('completed');
+                } else if (mealCount >= 1) {
+                    day.classList.add('partial');
+                }
+                
+                if (dateKey === today) {
+                    day.classList.add('today');
+                }
+                
+                day.innerHTML = `
+                    <div class="day-number">${i}</div>
+                    <div class="day-meals">${mealCount}/6</div>
+                `;
+                
+                day.onclick = () => {
+                    currentViewDate = date;
+                    toggleCalendar();
+                    updateDateDisplay();
+                    loadDayMeals();
+                    updateStats();
+                    loadNotes();
+                };
+                
+                grid.appendChild(day);
+            }
+            
+            const remainingDays = 42 - (firstDayOfWeek + daysInMonth);
+            for (let i = 1; i <= remainingDays; i++) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day other-month';
+                day.innerHTML = `<div class="day-number">${i}</div>`;
+                grid.appendChild(day);
             }
         }
 
@@ -704,7 +1085,7 @@
             for (let i = 6; i >= 0; i--) {
                 const date = new Date(today);
                 date.setDate(date.getDate() - i);
-                const dateKey = date.toISOString().split('T')[0];
+                const dateKey = getDateKey(date);
                 const dayMeals = mealData.meals[dateKey] || {};
                 const mealCount = Object.keys(dayMeals).length;
                 
@@ -738,10 +1119,73 @@
             const totalMeals = weekData.reduce((sum, day) => sum + day.mealCount, 0);
             const avgMeals = (totalMeals / 7).toFixed(1);
             const perfectDays = weekData.filter(day => day.isComplete).length;
+            const completionRate = Math.round((totalMeals / 42) * 100);
             
             document.getElementById('weekTotal').textContent = totalMeals;
             document.getElementById('weekAverage').textContent = avgMeals;
             document.getElementById('perfectDays').textContent = perfectDays;
+            document.getElementById('completionRate').textContent = completionRate + '%';
+        }
+
+        function updateAchievements() {
+            const achievements = [
+                { icon: '🌟', name: 'First Meal', condition: mealData.totalMealsEver >= 1 },
+                { icon: '🎯', name: 'Perfect Day', condition: checkAchievement('perfectDay') },
+                { icon: '🔥', name: '7 Day Streak', condition: mealData.bestStreak >= 7 },
+                { icon: '💯', name: '100 Meals', condition: mealData.totalMealsEver >= 100 },
+                { icon: '⚡', name: '30 Day Streak', condition: mealData.bestStreak >= 30 },
+                { icon: '👑', name: 'Consistency King', condition: mealData.bestStreak >= 50 }
+            ];
+            
+            const container = document.getElementById('achievements');
+            container.innerHTML = '';
+            
+            achievements.forEach(ach => {
+                const div = document.createElement('div');
+                div.className = 'achievement' + (ach.condition ? '' : ' locked');
+                div.innerHTML = `
+                    <div class="achievement-icon">${ach.icon}</div>
+                    <div class="achievement-name">${ach.name}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function checkAchievement(type) {
+            if (type === 'perfectDay') {
+                return Object.values(mealData.meals).some(day => Object.keys(day).length >= 6);
+            }
+            return false;
+        }
+
+        function loadNotes() {
+            const dateKey = getDateKey(currentViewDate);
+            const notesInput = document.getElementById('dailyNotes');
+            notesInput.value = mealData.notes[dateKey] || '';
+            
+            notesInput.onchange = () => {
+                if (notesInput.value.trim()) {
+                    mealData.notes[dateKey] = notesInput.value;
+                } else {
+                    delete mealData.notes[dateKey];
+                }
+                saveMealData();
+            };
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(mealData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `meal-planner-backup-${getDateKey(new Date())}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            alert('Data exported successfully! 💾');
         }
 
         initMealPlanner();
