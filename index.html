@@ -60,6 +60,11 @@
             min-width: 300px;
         }
 
+        .day-emoji {
+            font-size: 1.3em;
+            margin-right: 8px;
+        }
+
         .date-nav-btn {
             background: #6B8E23;
             color: #F0FFF0;
@@ -247,17 +252,11 @@
         }
 
         .meal-name {
-            font-size: 1.1em;
+            font-size: 1.05em;
             font-weight: 600;
             color: #2D5016;
             margin-bottom: 5px;
-        }
-
-        .meal-or {
-            color: #6B8E23;
-            font-style: italic;
-            margin: 10px 0;
-            font-weight: 600;
+            line-height: 1.5;
         }
 
         .meal-checkbox {
@@ -265,6 +264,28 @@
             height: 30px;
             cursor: pointer;
             accent-color: #6B8E23;
+            flex-shrink: 0;
+        }
+
+        .protein-options {
+            background: #FFF9E6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px dashed #6B8E23;
+        }
+
+        .protein-options-title {
+            font-weight: bold;
+            color: #2D5016;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .protein-list {
+            font-size: 0.9em;
+            color: #556B2F;
+            line-height: 1.6;
         }
 
         .summary-section, .calendar-section {
@@ -556,6 +577,7 @@
             <div class="date-nav">
                 <button class="date-nav-btn" onclick="changeDate(-1)">◀ Previous</button>
                 <div class="date-display">
+                    <span id="dayEmoji" class="day-emoji"></span>
                     <span id="dateDisplay"></span>
                     <span id="todayBadge" class="today-badge" style="display: none; margin-left: 10px;">TODAY</span>
                 </div>
@@ -653,99 +675,15 @@
             </div>
         </div>
 
-        <div class="meal-section">
-            <h2>🌅 Breakfast <span class="meal-time">(6:30 AM)</span></h2>
-            <div class="meal-item" id="breakfast-1">
-                <div class="meal-content">
-                    <div class="meal-name">3 scrambled eggs + avocado toast + banana</div>
-                </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('breakfast', 0, this.checked)">
-            </div>
-            <div class="meal-or">OR</div>
-            <div class="meal-item" id="breakfast-2">
-                <div class="meal-content">
-                    <div class="meal-name">Smoothie (banana + oats + peanut butter + milk)</div>
-                </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('breakfast', 1, this.checked)">
-            </div>
-        </div>
+        <div id="mealsContainer"></div>
 
         <div class="meal-section">
-            <h2>🥤 Snack 1 <span class="meal-time">(9:30 AM - at school)</span></h2>
-            <div class="meal-item" id="snack1-1">
-                <div class="meal-content">
-                    <div class="meal-name">Yogurt + granola</div>
+            <div class="protein-options">
+                <div class="protein-options-title">🍗 PROTEIN OPTIONS (Choose Any per Meal)</div>
+                <div class="protein-list">
+                    Boiled or fried eggs • Grilled or stewed chicken • Fried or stewed beef • Fried liver • 
+                    Tofu or tempeh • Beans, ndengu, or kamande • Nyama ya kienyeji, omena, or githeri
                 </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('snack1', 0, this.checked)">
-            </div>
-            <div class="meal-or">OR</div>
-            <div class="meal-item" id="snack1-2">
-                <div class="meal-content">
-                    <div class="meal-name">Handful of nuts + fruit</div>
-                </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('snack1', 1, this.checked)">
-            </div>
-        </div>
-
-        <div class="meal-section">
-            <h2>🍴 Lunch <span class="meal-time">(12:30 PM)</span></h2>
-            <div class="meal-item" id="lunch-1">
-                <div class="meal-content">
-                    <div class="meal-name">Chicken, beef, or tofu + rice/pasta + veggies</div>
-                    <div style="color: #6B8E23; font-size: 0.9em; margin-top: 5px;">Add olive oil or avocado for extra calories</div>
-                </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('lunch', 0, this.checked)">
-            </div>
-        </div>
-
-        <div class="meal-section">
-            <h2>🥤 Snack 2 <span class="meal-time">(4:00 PM - at school or on way home)</span></h2>
-            <div class="meal-item" id="snack2-1">
-                <div class="meal-content">
-                    <div class="meal-name">Milkshake (banana/strawberry + milk + oats + peanut butter)</div>
-                </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('snack2', 0, this.checked)">
-            </div>
-            <div class="meal-or">OR</div>
-            <div class="meal-item" id="snack2-2">
-                <div class="meal-content">
-                    <div class="meal-name">Cheese sandwich</div>
-                </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('snack2', 1, this.checked)">
-            </div>
-        </div>
-
-        <div class="meal-section">
-            <h2>🌙 Dinner <span class="meal-time">(7:30 PM)</span></h2>
-            <div class="meal-item" id="dinner-1">
-                <div class="meal-content">
-                    <div class="meal-name">Ugali/chapati + chicken or beef stew + greens</div>
-                </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('dinner', 0, this.checked)">
-            </div>
-            <div class="meal-or">OR</div>
-            <div class="meal-item" id="dinner-2">
-                <div class="meal-content">
-                    <div class="meal-name">Rice + beans + avocado</div>
-                </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('dinner', 1, this.checked)">
-            </div>
-        </div>
-
-        <div class="meal-section">
-            <h2>🌜 Night Snack <span class="meal-time">(9:30 PM)</span></h2>
-            <div class="meal-item" id="nightsnack-1">
-                <div class="meal-content">
-                    <div class="meal-name">Warm milk + peanut butter toast</div>
-                </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('nightsnack', 0, this.checked)">
-            </div>
-            <div class="meal-or">OR</div>
-            <div class="meal-item" id="nightsnack-2">
-                <div class="meal-content">
-                    <div class="meal-name">Yogurt + nuts</div>
-                </div>
-                <input type="checkbox" class="meal-checkbox" onchange="toggleMeal('nightsnack', 1, this.checked)">
             </div>
         </div>
 
@@ -756,6 +694,120 @@
     </div>
 
     <script>
+        const weeklyMealPlan = {
+            0: { // Sunday
+                emoji: '💤',
+                name: 'SUNDAY',
+                meals: {
+                    breakfast: ['French toast', 'Fruit (pawpaw or watermelon)', 'Milk'],
+                    snack1: ['Yogurt or mala + granola or peanuts'],
+                    lunch: ['Rice', 'Protein stew', 'Cabbage', 'Avocado'],
+                    snack2: ['Peanut butter milkshake (banana + milk + peanut butter + honey)'],
+                    dinner: ['Ugali', 'Beans', 'Kunde or managu'],
+                    nightsnack: ['Warm milk', 'Banana']
+                }
+            },
+            1: { // Monday
+                emoji: '🥩',
+                name: 'MONDAY',
+                meals: {
+                    breakfast: ['Uji ya wimbi (millet porridge) with milk + 1 spoon peanut butter', '1 boiled egg', 'Banana'],
+                    snack1: ['Mala or yogurt + peanuts or granola'],
+                    lunch: ['Protein', 'Brown rice', 'Sukuma wiki', '½ avocado'],
+                    snack2: ['Smoothie (banana + groundnuts + milk + oats + honey)'],
+                    dinner: ['Ugali', 'Protein stew', 'Kunde or managu'],
+                    nightsnack: ['Warm milk', 'Peanut butter toast']
+                }
+            },
+            2: { // Tuesday
+                emoji: '💪',
+                name: 'TUESDAY',
+                meals: {
+                    breakfast: ['2 chapatis', '2 scrambled eggs', 'Avocado slices'],
+                    snack1: ['Roasted groundnuts', 'Apple or guava'],
+                    lunch: ['Protein (or beans/tofu)', 'Rice', 'Cabbage', 'Avocado drizzle'],
+                    snack2: ['Milkshake (banana or strawberry + oats + milk + honey)'],
+                    dinner: ['Chapati', 'Protein curry', 'Spinach'],
+                    nightsnack: ['Mala', 'Nuts']
+                }
+            },
+            3: { // Wednesday
+                emoji: '🌿',
+                name: 'WEDNESDAY',
+                meals: {
+                    breakfast: ['Smoothie (banana + oats + peanut butter + milk + cinnamon)'],
+                    snack1: ['2 boiled eggs', 'Fruit (apple or orange)'],
+                    lunch: ['Ndengu', 'Brown rice', 'Sukuma wiki', 'Oil drizzle'],
+                    snack2: ['Yogurt', 'Nuts'],
+                    dinner: ['Protein (or tofu)', 'Stir-fried cabbage', 'Sweet potatoes'],
+                    nightsnack: ['Warm milk', 'Banana']
+                }
+            },
+            4: { // Thursday
+                emoji: '🍑',
+                name: 'THURSDAY',
+                meals: {
+                    breakfast: ['3-egg omelette (onions, tomatoes, dania)', 'Brown bread'],
+                    snack1: ['Peanut butter + banana sandwich'],
+                    lunch: ['Protein', 'Ugali', 'Avocado salad'],
+                    snack2: ['Smoothie (milk + oats + peanut butter + banana)'],
+                    dinner: ['Rice', 'Beans', 'Greens (sukuma/spinach)', '½ avocado'],
+                    nightsnack: ['Mala or yogurt', 'Nuts']
+                }
+            },
+            5: { // Friday
+                emoji: '⚡',
+                name: 'FRIDAY',
+                meals: {
+                    breakfast: ['Pancakes (flour, milk, eggs)', 'Honey', 'Banana'],
+                    snack1: ['Yogurt', 'Roasted groundnuts'],
+                    lunch: ['Protein stir-fry', 'Spaghetti or rice', 'Cabbage'],
+                    snack2: ['Peanut butter smoothie (banana + milk + honey)'],
+                    dinner: ['Ugali', 'Protein', 'Sukuma wiki', 'Milk'],
+                    nightsnack: ['Peanut butter toast', 'Warm milk']
+                }
+            },
+            6: { // Saturday
+                emoji: '💃',
+                name: 'SATURDAY',
+                meals: {
+                    breakfast: ['Fruit bowl (banana + pineapple + apple)', 'Yogurt', 'Oats/peanuts'],
+                    snack1: ['Nuts or boiled maize'],
+                    lunch: ['Chapati wrap with protein + veggies'],
+                    snack2: ['Smoothie (milk + oats + peanut butter + honey)'],
+                    dinner: ['Chapati', 'Lentil stew (kamande)', 'Spinach'],
+                    nightsnack: ['Herbal tea', 'Peanut butter toast']
+                }
+            }
+        };
+
+        const mealTimes = {
+            breakfast: '6:30 AM',
+            snack1: '9:30 AM - at school',
+            lunch: '12:30 PM',
+            snack2: '4:00 PM - at school or on way home',
+            dinner: '7:30 PM',
+            nightsnack: '9:30 PM'
+        };
+
+        const mealIcons = {
+            breakfast: '🌅',
+            snack1: '🥤',
+            lunch: '🍴',
+            snack2: '🥤',
+            dinner: '🌙',
+            nightsnack: '🌜'
+        };
+
+        const mealTitles = {
+            breakfast: 'Breakfast',
+            snack1: 'Snack 1',
+            lunch: 'Lunch',
+            snack2: 'Snack 2',
+            dinner: 'Dinner',
+            nightsnack: 'Night Snack'
+        };
+
         let currentViewDate = new Date();
         let calendarViewDate = new Date();
         let mealData = loadMealData();
@@ -794,6 +846,7 @@
 
         function initMealPlanner() {
             updateDateDisplay();
+            renderMeals();
             loadDayMeals();
             updateStats();
             checkStreak();
@@ -801,6 +854,11 @@
         }
 
         function updateDateDisplay() {
+            const dayOfWeek = currentViewDate.getDay();
+            const dayData = weeklyMealPlan[dayOfWeek];
+            
+            document.getElementById('dayEmoji').textContent = dayData.emoji;
+            
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('dateDisplay').textContent = currentViewDate.toLocaleDateString('en-US', options);
             
@@ -819,19 +877,57 @@
         }
 
         function changeDate(days) {
-            const newDate = new Date(currentViewDate);
-            newDate.setDate(newDate.getDate() + days);
-            
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             
+            const newDate = new Date(currentViewDate);
+            newDate.setDate(newDate.getDate() + days);
+            newDate.setHours(0, 0, 0, 0);
+            
+            // Allow going back to any past date, but not future dates
             if (newDate <= today) {
-                currentViewDate = newDate;
+                currentViewDate = new Date(newDate);
                 updateDateDisplay();
+                renderMeals();
                 loadDayMeals();
                 updateStats();
                 loadNotes();
             }
+        }
+
+        function renderMeals() {
+            const dayOfWeek = currentViewDate.getDay();
+            const dayData = weeklyMealPlan[dayOfWeek];
+            const container = document.getElementById('mealsContainer');
+            container.innerHTML = '';
+
+            Object.keys(dayData.meals).forEach(mealType => {
+                const mealSection = document.createElement('div');
+                mealSection.className = 'meal-section';
+                
+                let mealHTML = `
+                    <h2>${mealIcons[mealType]} ${mealTitles[mealType]} 
+                        <span class="meal-time">(${mealTimes[mealType]})</span>
+                    </h2>
+                `;
+
+                const mealItems = dayData.meals[mealType];
+                mealItems.forEach((item, index) => {
+                    const mealId = `${mealType}-${index}`;
+                    mealHTML += `
+                        <div class="meal-item" id="${mealId}">
+                            <div class="meal-content">
+                                <div class="meal-name">${item}</div>
+                            </div>
+                            <input type="checkbox" class="meal-checkbox" 
+                                   onchange="toggleMeal('${mealType}', ${index}, this.checked)">
+                        </div>
+                    `;
+                });
+
+                mealSection.innerHTML = mealHTML;
+                container.appendChild(mealSection);
+            });
         }
 
         function loadDayMeals() {
@@ -859,7 +955,7 @@
 
         function toggleMeal(category, option, checked) {
             const dateKey = getDateKey(currentViewDate);
-            const mealId = `${category}-${option + 1}`;
+            const mealId = `${category}-${option}`;
             
             if (!mealData.meals[dateKey]) {
                 mealData.meals[dateKey] = {};
@@ -869,16 +965,6 @@
                 mealData.meals[dateKey][mealId] = true;
                 document.getElementById(mealId).classList.add('completed');
                 mealData.totalMealsEver++;
-                
-                const otherOption = option === 0 ? 1 : 0;
-                const otherMealId = `${category}-${otherOption + 1}`;
-                const otherCheckbox = document.querySelector(`#${otherMealId} input[type="checkbox"]`);
-                if (otherCheckbox && otherCheckbox.checked) {
-                    otherCheckbox.checked = false;
-                    delete mealData.meals[dateKey][otherMealId];
-                    document.getElementById(otherMealId).classList.remove('completed');
-                    mealData.totalMealsEver--;
-                }
             } else {
                 delete mealData.meals[dateKey][mealId];
                 document.getElementById(mealId).classList.remove('completed');
@@ -1059,6 +1145,7 @@
                     currentViewDate = date;
                     toggleCalendar();
                     updateDateDisplay();
+                    renderMeals();
                     loadDayMeals();
                     updateStats();
                     loadNotes();
