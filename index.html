@@ -5,6 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enhanced Daily Meal Planner</title>
     <style>
+        :root {
+            /* Light Mode - Rose Gold & Blush */
+            --bg-gradient-start: #FFE5E0;
+            --bg-gradient-mid: #F4CBAD;
+            --bg-gradient-end: #E0AFA0;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(224, 175, 160, 0.3);
+            --primary: #E0AFA0;
+            --primary-dark: #C48B7D;
+            --primary-light: #F4CBAD;
+            --secondary: #F4CBAD;
+            --accent: #C48B7D;
+            --text-primary: #5A4A42;
+            --text-secondary: #8B7266;
+            --text-light: #A58D7F;
+            --meal-item-bg: #FFF9F5;
+            --meal-item-hover: #FFEDE8;
+            --completed-bg: #F4CBAD;
+            --completed-border: #E0AFA0;
+            --progress-bg: #FFE5E0;
+            --progress-fill: linear-gradient(90deg, #E0AFA0 0%, #F4CBAD 50%, #E0AFA0 100%);
+            --shadow-light: rgba(224, 175, 160, 0.15);
+            --shadow-medium: rgba(224, 175, 160, 0.25);
+            --shadow-heavy: rgba(224, 175, 160, 0.35);
+            --stat-gradient: linear-gradient(135deg, #E0AFA0 0%, #C48B7D 100%);
+            --badge-bg: linear-gradient(135deg, #FF6B9D 0%, #C44569 100%);
+            --calendar-partial: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode - Slate & Blue */
+            --bg-gradient-start: #1A202C;
+            --bg-gradient-mid: #2D3748;
+            --bg-gradient-end: #1A202C;
+            --card-bg: rgba(45, 55, 72, 0.95);
+            --card-border: rgba(66, 153, 225, 0.3);
+            --primary: #4299E1;
+            --primary-dark: #2C5282;
+            --primary-light: #63B3ED;
+            --secondary: #63B3ED;
+            --accent: #3182CE;
+            --text-primary: #E2E8F0;
+            --text-secondary: #CBD5E0;
+            --text-light: #A0AEC0;
+            --meal-item-bg: #2D3748;
+            --meal-item-hover: #374151;
+            --completed-bg: #2C5282;
+            --completed-border: #4299E1;
+            --progress-bg: #2D3748;
+            --progress-fill: linear-gradient(90deg, #4299E1 0%, #63B3ED 50%, #4299E1 100%);
+            --shadow-light: rgba(0, 0, 0, 0.3);
+            --shadow-medium: rgba(0, 0, 0, 0.4);
+            --shadow-heavy: rgba(0, 0, 0, 0.5);
+            --stat-gradient: linear-gradient(135deg, #4299E1 0%, #2C5282 100%);
+            --badge-bg: linear-gradient(135deg, #F56565 0%, #C53030 100%);
+            --calendar-partial: linear-gradient(135deg, #ECC94B 0%, #D69E2E 100%);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,239 +70,510 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #2D5016 0%, #4A7C59 50%, #6B8E23 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: var(--text-primary);
+            transition: background 0.3s ease, color 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            top: -250px;
+            left: -250px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: var(--secondary);
+            top: 50%;
+            right: -200px;
+            animation-delay: 7s;
+            animation-duration: 25s;
+        }
+
+        .orb-3 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent);
+            bottom: -300px;
+            left: 30%;
+            animation-delay: 14s;
+            animation-duration: 30s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            25% {
+                transform: translate(50px, -50px) scale(1.1);
+            }
+            50% {
+                transform: translate(-30px, 30px) scale(0.9);
+            }
+            75% {
+                transform: translate(30px, 50px) scale(1.05);
+            }
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: particle-float linear infinite;
+        }
+
+        @keyframes particle-float {
+            0% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) translateX(var(--drift)) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .mesh-gradient {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(at 20% 30%, var(--primary) 0px, transparent 50%),
+                radial-gradient(at 80% 70%, var(--secondary) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, var(--accent) 0px, transparent 50%);
+            opacity: 0.15;
+            animation: mesh-move 15s ease-in-out infinite;
+        }
+
+        @keyframes mesh-move {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.1) rotate(5deg);
+            }
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            padding: 10px 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px var(--shadow-medium);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-heavy);
+        }
+
+        .theme-icon {
+            font-size: 1.2em;
         }
 
         .header {
-            background: linear-gradient(135deg, #F0FFF0 0%, #E8F5E9 100%);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(45, 80, 22, 0.3);
-            border: 2px solid #6B8E23;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 20px 60px var(--shadow-light);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
         }
 
         h1 {
-            color: #2D5016;
-            margin-bottom: 10px;
-            font-size: 2em;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            font-size: 2.2em;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: -0.5px;
         }
 
         .date-nav {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
+            gap: 20px;
+            margin: 25px 0;
             flex-wrap: wrap;
         }
 
         .date-display {
             text-align: center;
-            color: #2D5016;
-            font-size: 1.2em;
+            color: var(--text-primary);
+            font-size: 1.3em;
             font-weight: 600;
-            padding: 10px 20px;
-            background: #FAFFF0;
-            border-radius: 10px;
-            border: 2px solid #6B8E23;
-            min-width: 300px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--meal-item-bg) 0%, var(--meal-item-hover) 100%);
+            border-radius: 16px;
+            border: 2px solid var(--primary);
+            min-width: 350px;
+            box-shadow: 0 4px 12px var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .date-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-medium);
         }
 
         .day-emoji {
-            font-size: 1.3em;
-            margin-right: 8px;
+            font-size: 1.4em;
+            margin-right: 10px;
         }
 
         .date-nav-btn {
-            background: #6B8E23;
-            color: #F0FFF0;
+            background: var(--stat-gradient);
+            color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
+            padding: 12px 24px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
-            transition: all 0.3s;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px var(--shadow-medium);
         }
 
-        .date-nav-btn:hover {
-            background: #556B2F;
-            transform: scale(1.05);
+        .date-nav-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-heavy);
         }
 
         .date-nav-btn:disabled {
-            background: #999;
+            background: linear-gradient(135deg, #999 0%, #777 100%);
             cursor: not-allowed;
             opacity: 0.5;
+            transform: none;
         }
 
         .today-badge {
-            background: #CD5C5C;
+            background: var(--badge-bg);
             color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.8em;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75em;
             font-weight: bold;
+            margin-left: 10px;
+            box-shadow: 0 2px 8px var(--shadow-medium);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .stats-info {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #6B8E23 0%, #556B2F 100%);
-            color: #F0FFF0;
-            padding: 20px;
-            border-radius: 15px;
+            background: var(--stat-gradient);
+            color: white;
+            padding: 25px;
+            border-radius: 18px;
             text-align: center;
-            box-shadow: 0 5px 15px rgba(45, 80, 22, 0.3);
+            box-shadow: 0 8px 24px var(--shadow-medium);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px var(--shadow-heavy);
         }
 
         .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin: 10px 0;
+            font-size: 2.8em;
+            font-weight: 800;
+            margin: 12px 0;
+            position: relative;
         }
 
         .stat-label {
-            font-size: 0.9em;
-            opacity: 0.9;
+            font-size: 0.95em;
+            opacity: 0.95;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
         }
 
         .progress-bar {
             width: 100%;
-            height: 30px;
-            background: #E8F5E9;
-            border-radius: 15px;
+            height: 36px;
+            background: var(--progress-bg);
+            border-radius: 18px;
             overflow: hidden;
-            margin-top: 20px;
-            border: 2px solid #6B8E23;
+            margin-top: 25px;
+            border: 2px solid var(--primary);
+            box-shadow: inset 0 2px 8px var(--shadow-light);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #6B8E23 0%, #8FBC8F 100%);
-            transition: width 0.3s ease;
+            background: var(--progress-fill);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+            transition: width 0.5s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #F0FFF0;
-            font-weight: bold;
-            font-size: 0.9em;
+            color: white;
+            font-weight: 700;
+            font-size: 1em;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         .action-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
             font-size: 1em;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px var(--shadow-light);
+            position: relative;
+            overflow: hidden;
+            color: white;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .btn-reset {
-            background: #CD5C5C;
-            color: #F0FFF0;
+            background: linear-gradient(135deg, #F56565 0%, #C53030 100%);
         }
 
         .btn-reset:hover {
-            background: #B22222;
+            background: linear-gradient(135deg, #C53030 0%, #9B2C2C 100%);
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-medium);
         }
 
         .btn-summary {
-            background: #6B8E23;
-            color: #F0FFF0;
+            background: var(--stat-gradient);
         }
 
         .btn-summary:hover {
-            background: #556B2F;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent) 100%);
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-medium);
         }
 
         .btn-calendar {
-            background: #8B7355;
-            color: #F0FFF0;
+            background: linear-gradient(135deg, #8B7355 0%, #6B5845 100%);
         }
 
         .btn-calendar:hover {
-            background: #6B5845;
+            background: linear-gradient(135deg, #6B5845 0%, #5a4835 100%);
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-medium);
         }
 
         .btn-export {
-            background: #4682B4;
-            color: #F0FFF0;
+            background: linear-gradient(135deg, #48BB78 0%, #38A169 100%);
         }
 
         .btn-export:hover {
-            background: #36648B;
+            background: linear-gradient(135deg, #38A169 0%, #2F855A 100%);
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow-medium);
         }
 
         .meal-section {
-            background: linear-gradient(135deg, #F0FFF0 0%, #E8F5E9 100%);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(45, 80, 22, 0.3);
-            border: 2px solid #6B8E23;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 12px 40px var(--shadow-light);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .meal-section:hover {
+            box-shadow: 0 16px 48px var(--shadow-medium);
         }
 
         .meal-section h2 {
-            color: #2D5016;
-            margin-bottom: 20px;
+            color: var(--text-primary);
+            margin-bottom: 25px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            font-size: 1.6em;
+            font-weight: 700;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-light);
         }
 
         .meal-time {
-            font-size: 0.7em;
-            color: #6B8E23;
-            font-weight: normal;
+            font-size: 0.65em;
+            color: var(--text-secondary);
+            font-weight: 500;
+            background: var(--meal-item-bg);
+            padding: 4px 12px;
+            border-radius: 8px;
+            margin-left: auto;
         }
 
         .meal-item {
-            background: #FAFFF0;
-            padding: 20px;
-            border-radius: 12px;
+            background: var(--meal-item-bg);
+            padding: 22px;
+            border-radius: 16px;
             margin-bottom: 15px;
-            border-left: 4px solid #6B8E23;
-            box-shadow: 0 3px 10px rgba(45, 80, 22, 0.15);
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 16px var(--shadow-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .meal-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 16px 0 0 16px;
+            transition: width 0.3s ease;
+        }
+
+        .meal-item:hover::before {
+            width: 8px;
         }
 
         .meal-item:hover {
-            transform: translateX(5px);
+            transform: translateX(8px);
+            box-shadow: 0 6px 20px var(--shadow-medium);
+            background: var(--meal-item-hover);
         }
 
         .meal-item.completed {
-            background: #D4EDD4;
-            opacity: 0.7;
+            background: var(--completed-bg);
+            opacity: 0.8;
+            border-left-color: var(--completed-border);
+        }
+
+        .meal-item.completed::after {
+            content: '✓';
+            position: absolute;
+            right: 70px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-dark);
+            font-size: 1.5em;
+            font-weight: bold;
+            opacity: 0.3;
         }
 
         .meal-content {
@@ -252,50 +581,63 @@
         }
 
         .meal-name {
-            font-size: 1.05em;
+            font-size: 1.08em;
             font-weight: 600;
-            color: #2D5016;
+            color: var(--text-primary);
             margin-bottom: 5px;
-            line-height: 1.5;
-        }
-
-        .meal-checkbox {
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            accent-color: #6B8E23;
-            flex-shrink: 0;
-        }
-
-        .protein-options {
-            background: #FFF9E6;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border: 2px dashed #6B8E23;
-        }
-
-        .protein-options-title {
-            font-weight: bold;
-            color: #2D5016;
-            margin-bottom: 8px;
-            font-size: 0.95em;
-        }
-
-        .protein-list {
-            font-size: 0.9em;
-            color: #556B2F;
             line-height: 1.6;
         }
 
+        .meal-checkbox {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .meal-checkbox:hover {
+            transform: scale(1.15);
+        }
+
+        .protein-options {
+            background: var(--meal-item-bg);
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 25px;
+            border: 2px dashed var(--primary);
+            box-shadow: 0 4px 16px var(--shadow-light);
+        }
+
+        .protein-options-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-size: 1.05em;
+        }
+
+        .protein-list {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
         .summary-section, .calendar-section {
-            background: linear-gradient(135deg, #F0FFF0 0%, #E8F5E9 100%);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(45, 80, 22, 0.3);
-            border: 2px solid #6B8E23;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 25px;
+            box-shadow: 0 12px 40px var(--shadow-light);
+            border: 1px solid var(--card-border);
             display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .summary-section.active, .calendar-section.active {
@@ -306,244 +648,322 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-light);
         }
 
         .section-header h2 {
-            color: #2D5016;
+            color: var(--text-primary);
+            font-size: 1.8em;
+            font-weight: 700;
         }
 
         .streak-section {
-            background: linear-gradient(135deg, #6B8E23 0%, #556B2F 100%);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 20px;
+            background: var(--stat-gradient);
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 25px;
             text-align: center;
-            color: #F0FFF0;
+            color: white;
+            box-shadow: 0 12px 32px var(--shadow-medium);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .streak-section::before {
+            content: '🔥';
+            position: absolute;
+            font-size: 15em;
+            opacity: 0.05;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .streak-section h3 {
-            font-size: 1.5em;
+            font-size: 1.6em;
             margin-bottom: 15px;
+            position: relative;
         }
 
         .streak-display {
-            font-size: 4em;
-            font-weight: bold;
-            margin: 15px 0;
+            font-size: 5em;
+            font-weight: 800;
+            margin: 20px 0;
+            position: relative;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .streak-description {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 1.2em;
+            opacity: 0.95;
+            position: relative;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
         }
 
         .calendar-header {
             text-align: center;
-            font-weight: bold;
-            color: #2D5016;
-            padding: 10px;
-            background: #FAFFF0;
-            border-radius: 8px;
+            font-weight: 700;
+            color: var(--text-primary);
+            padding: 12px;
+            background: var(--meal-item-bg);
+            border-radius: 12px;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .calendar-day {
-            background: #FAFFF0;
-            padding: 15px;
-            border-radius: 10px;
+            background: var(--meal-item-bg);
+            padding: 18px;
+            border-radius: 14px;
             text-align: center;
-            border: 2px solid #E8F5E9;
+            border: 2px solid var(--card-border);
             cursor: pointer;
-            transition: all 0.3s;
-            min-height: 80px;
+            transition: all 0.3s ease;
+            min-height: 90px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            color: var(--text-primary);
         }
 
         .calendar-day:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(45, 80, 22, 0.2);
+            transform: scale(1.08);
+            box-shadow: 0 8px 24px var(--shadow-medium);
+            border-color: var(--primary);
         }
 
         .calendar-day.other-month {
-            opacity: 0.3;
+            opacity: 0.25;
         }
 
         .calendar-day.today {
-            border-color: #CD5C5C;
+            border-color: #F56565;
             border-width: 3px;
+            box-shadow: 0 0 0 3px rgba(245, 101, 101, 0.2);
         }
 
         .calendar-day.completed {
-            background: linear-gradient(135deg, #6B8E23 0%, #8FBC8F 100%);
-            color: #F0FFF0;
-            border-color: #556B2F;
+            background: var(--stat-gradient);
+            color: white;
+            border-color: var(--primary-dark);
         }
 
         .calendar-day.partial {
-            background: linear-gradient(135deg, #F0E68C 0%, #FFD700 100%);
-            color: #2D5016;
-            border-color: #DAA520;
+            background: var(--calendar-partial);
+            color: var(--text-primary);
+            border-color: #D69E2E;
         }
 
         .day-number {
-            font-size: 1.2em;
-            font-weight: bold;
+            font-size: 1.4em;
+            font-weight: 700;
         }
 
         .day-meals {
-            font-size: 0.9em;
-            margin-top: 5px;
+            font-size: 0.95em;
+            margin-top: 8px;
+            font-weight: 600;
         }
 
         .calendar-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .calendar-month {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #2D5016;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--text-primary);
         }
 
         .weekly-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
         }
 
         .day-box {
-            background: #FAFFF0;
-            padding: 15px;
-            border-radius: 10px;
+            background: var(--meal-item-bg);
+            padding: 18px;
+            border-radius: 14px;
             text-align: center;
-            border: 2px solid #E8F5E9;
+            border: 2px solid var(--card-border);
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .day-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px var(--shadow-medium);
         }
 
         .day-box.completed {
-            background: linear-gradient(135deg, #6B8E23 0%, #8FBC8F 100%);
-            color: #F0FFF0;
-            border-color: #556B2F;
+            background: var(--stat-gradient);
+            color: white;
+            border-color: var(--primary-dark);
         }
 
         .day-name {
-            font-size: 0.8em;
-            font-weight: 600;
+            font-size: 0.85em;
+            font-weight: 700;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .summary-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
         }
 
         .summary-stat {
-            background: #FAFFF0;
-            padding: 20px;
-            border-radius: 10px;
+            background: var(--meal-item-bg);
+            padding: 25px;
+            border-radius: 16px;
             text-align: center;
-            border-left: 4px solid #6B8E23;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 4px 16px var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .summary-stat:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px var(--shadow-medium);
         }
 
         .summary-stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #6B8E23;
-            margin-bottom: 5px;
+            font-size: 2.5em;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
         }
 
         .summary-stat-label {
-            color: #2D5016;
-            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .achievement-section {
-            background: #FAFFF0;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
+            background: var(--meal-item-bg);
+            padding: 25px;
+            border-radius: 16px;
+            margin-top: 25px;
+            box-shadow: 0 4px 16px var(--shadow-light);
         }
 
         .achievement-section h3 {
-            color: #2D5016;
-            margin-bottom: 15px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            font-weight: 700;
         }
 
         .achievements {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
         }
 
         .achievement {
             text-align: center;
-            padding: 15px;
+            padding: 20px;
             background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(255, 165, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .achievement:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: 0 8px 24px rgba(255, 165, 0, 0.4);
         }
 
         .achievement.locked {
-            background: #E0E0E0;
+            background: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
             opacity: 0.5;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
 
         .achievement-icon {
-            font-size: 2em;
-            margin-bottom: 5px;
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
         .achievement-name {
-            font-size: 0.9em;
-            font-weight: bold;
-            color: #2D5016;
+            font-size: 0.95em;
+            font-weight: 700;
+            color: #5A4A42;
         }
 
         .notes-section {
-            margin-top: 20px;
-            background: #FAFFF0;
-            padding: 20px;
-            border-radius: 15px;
+            margin-top: 25px;
+            background: var(--meal-item-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px var(--shadow-light);
         }
 
         .notes-section h3 {
-            color: #2D5016;
-            margin-bottom: 10px;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
         }
 
         .notes-input {
             width: 100%;
-            min-height: 80px;
-            padding: 10px;
-            border: 2px solid #6B8E23;
-            border-radius: 10px;
+            min-height: 100px;
+            padding: 15px;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
             font-family: inherit;
             font-size: 1em;
             resize: vertical;
+            transition: all 0.3s ease;
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: var(--primary-dark);
+            box-shadow: 0 0 0 4px var(--shadow-light);
         }
 
         @media (max-width: 768px) {
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+
             h1 {
-                font-size: 1.5em;
+                font-size: 1.8em;
             }
 
             .date-display {
-                min-width: 200px;
-                font-size: 1em;
+                min-width: 250px;
+                font-size: 1.1em;
+                padding: 12px 20px;
             }
 
             .meal-item {
@@ -552,24 +972,57 @@
                 gap: 15px;
             }
 
+            .meal-item.completed::after {
+                right: 20px;
+                top: 20px;
+            }
+
             .calendar-grid {
-                grid-template-columns: repeat(7, 1fr);
-                gap: 5px;
+                gap: 8px;
             }
 
             .calendar-day {
-                min-height: 60px;
-                padding: 8px;
+                min-height: 70px;
+                padding: 12px 8px;
                 font-size: 0.9em;
             }
 
             .summary-stats {
                 grid-template-columns: 1fr;
             }
+
+            .stat-number {
+                font-size: 2.2em;
+            }
+
+            .streak-display {
+                font-size: 4em;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation: none !important;
+                transition: none !important;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Dynamic Animated Background -->
+    <div class="background-animation">
+        <div class="mesh-gradient"></div>
+        <div class="gradient-orb orb-1"></div>
+        <div class="gradient-orb orb-2"></div>
+        <div class="gradient-orb orb-3"></div>
+        <div id="particles"></div>
+    </div>
+
+    <div class="theme-toggle" onclick="toggleTheme()">
+        <span class="theme-icon" id="themeIcon">🌙</span>
+        <span id="themeText">Dark Mode</span>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>🍽 Enhanced Meal Planner</h1>
@@ -579,7 +1032,7 @@
                 <div class="date-display">
                     <span id="dayEmoji" class="day-emoji"></span>
                     <span id="dateDisplay"></span>
-                    <span id="todayBadge" class="today-badge" style="display: none; margin-left: 10px;">TODAY</span>
+                    <span id="todayBadge" class="today-badge" style="display: none;">TODAY</span>
                 </div>
                 <button class="date-nav-btn" id="nextBtn" onclick="changeDate(1)">Next ▶</button>
             </div>
@@ -644,10 +1097,10 @@
                 <h3>🔥 Your Streak</h3>
                 <div class="streak-display" id="summaryStreak">0</div>
                 <div class="streak-description">consecutive days</div>
-                <div style="margin-top: 15px; font-size: 0.95em;">Keep it up! You're building great habits 💪</div>
+                <div style="margin-top: 15px; font-size: 0.95em; position: relative;">Keep it up! You're building great habits 💪</div>
             </div>
 
-            <h3 style="color: #2D5016; margin-bottom: 15px;">Last 7 Days</h3>
+            <h3 style="color: var(--text-primary); margin-bottom: 15px; font-size: 1.4em;">Last 7 Days</h3>
             <div class="weekly-grid" id="weeklyGrid"></div>
 
             <div class="summary-stats">
@@ -812,6 +1265,67 @@
         let calendarViewDate = new Date();
         let mealData = loadMealData();
 
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else if (prefersDark) {
+                setTheme('dark');
+            } else {
+                setTheme('light');
+            }
+            
+            // Initialize particles
+            createParticles();
+        }
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random positioning
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.setProperty('--drift', (Math.random() - 0.5) * 200 + 'px');
+                
+                // Random animation duration and delay
+                const duration = 15 + Math.random() * 20;
+                const delay = Math.random() * 10;
+                particle.style.animationDuration = duration + 's';
+                particle.style.animationDelay = delay + 's';
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            
+            const themeIcon = document.getElementById('themeIcon');
+            const themeText = document.getElementById('themeText');
+            
+            if (theme === 'dark') {
+                themeIcon.textContent = '☀️';
+                themeText.textContent = 'Light Mode';
+            } else {
+                themeIcon.textContent = '🌙';
+                themeText.textContent = 'Dark Mode';
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        }
+
         function loadMealData() {
             try {
                 const saved = localStorage.getItem('mealPlannerData');
@@ -845,6 +1359,7 @@
         }
 
         function initMealPlanner() {
+            initTheme();
             updateDateDisplay();
             renderMeals();
             loadDayMeals();
@@ -884,7 +1399,6 @@
             newDate.setDate(newDate.getDate() + days);
             newDate.setHours(0, 0, 0, 0);
             
-            // Allow going back to any past date, but not future dates
             if (newDate <= today) {
                 currentViewDate = new Date(newDate);
                 updateDateDisplay();
@@ -907,7 +1421,7 @@
                 
                 let mealHTML = `
                     <h2>${mealIcons[mealType]} ${mealTitles[mealType]} 
-                        <span class="meal-time">(${mealTimes[mealType]})</span>
+                        <span class="meal-time">${mealTimes[mealType]}</span>
                     </h2>
                 `;
 
